@@ -16,28 +16,25 @@
 // // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 // reportWebVitals();
 
-import { createStore } from "redux";
+import { createStore, combineReducers } from "redux";
 
-const initialState = {
+const mathReducer = (state = {
   result: 1,
-  lastValues: [],
-  username: 'Max'
-}
-
-const reducer = (state = initialState, action) => {
+  lastValues: []
+}, action) => {
   switch (action.type) {
-    case "ADD":
+    case 'ADD':
       state = {
         ...state,
         result: state.result + action.payload,
-        lastValues: [...state.lastValues, action.payload]
+        lastValues: [...state.lastValues, action.payload],
       };
       break;
-    case "SUBTRACT":
+    case 'SUBTRACT':
       state = {
         ...state,
         result: state.result - action.payload,
-        lastValues: [...state.lastValues, action.payload]
+        lastValues: [...state.lastValues, action.payload],
       };
       break;
     default:
@@ -46,7 +43,33 @@ const reducer = (state = initialState, action) => {
   return state;
 }
 
-const store = createStore(reducer);
+const userReducer = (state = {
+    name: 'Max', 
+    age: 27
+  }, action) => {
+  switch (action.type) {
+    case 'SET_NAME':
+      state = {
+        ...state,
+        name: action.payload,
+      };
+      break;
+    case 'SET_AGE':
+      state = {
+        ...state,
+        age: action.payload,
+      };
+      break;
+    default:
+      return state;
+  }
+  return state;
+};
+
+// const store = createStore(
+//   combineReducers({ mathReducer: mathReducer, userReducer: userReducer })
+// );
+const store = createStore(combineReducers({mathReducer, userReducer}));
 
 store.subscribe(() => {
   console.log("Store updated!", store.getState())
@@ -66,3 +89,9 @@ store.dispatch({
   type: 'SUBTRACT',
   payload: 80,
 });
+
+store.dispatch({
+  type: 'SET_AGE',
+  payload: 30,
+});
+
